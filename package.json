@@ -1,0 +1,49 @@
+{
+  "name": "blockframe-skin-studio",
+  "version": "1.0.0",
+  "description": "Minecraft Skin Studio — 3D skin viewer, armor customizer, and animation previewer",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "serve": "node server.js",
+    "build": "electron-builder --win",
+    "build:dir": "electron-builder --win --dir"
+  },
+  "author": "Blockframe",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.blockframe.skinstudio",
+    "productName": "Blockframe Skin Studio",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "server.js",
+      "version.json",
+      "src/**/*",
+      "assets/**/*",
+      "icons/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "icons/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "icons/icon.png",
+      "uninstallerIcon": "icons/icon.png"
+    }
+  }
+}

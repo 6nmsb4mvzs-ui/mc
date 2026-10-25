@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#10120f" />
+  <title>Blockframe — Skin Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./startup.css" />
+  <script>
+    window.__blockframeReady = false;
+    window.__blockframeFail = function (message) {
+      const box = document.getElementById('loading');
+      if (!box || window.__blockframeReady) return;
+      box.classList.add('load-error');
+      const content = document.createElement('div');
+      const heading = document.createElement('strong'); heading.textContent = '3D preview could not start';
+      const detail = document.createElement('p'); detail.textContent = message;
+      const hint = document.createElement('small'); hint.textContent = 'The local 3D engine is bundled with this app. Keep the local server window open and reload after fixing the error above.';
+      const button = document.createElement('button'); button.textContent = 'Reload studio'; button.onclick = function () { location.reload(); };
+      content.append(heading, detail, hint, button); box.replaceChildren(content);
+    };
+    window.addEventListener('error', function (event) {
+      if (event.target && event.target !== window) {
+        if (event.target.tagName === 'SCRIPT') window.__blockframeFail('A studio script failed to load: ' + (event.target.src || 'unknown script'));
+      } else window.__blockframeFail('Startup error: ' + (event.message || 'unknown JavaScript error'));
+    }, true);
+    window.addEventListener('unhandledrejection', function (event) {
+      const reason = event.reason;
+      window.__blockframeFail('Startup error: ' + (reason && reason.message ? reason.message : String(reason || 'unknown rejected promise')));
+    });
+    window.setTimeout(function () { if (!window.__blockframeReady) window.__blockframeFail('The 3D engine is taking too long to load. Check your internet connection and reload.'); }, 15000);
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Blockframe home"><span class="brand-mark">B</span><span>blockframe</span><span class="brand-tag">STUDIO</span></a>
+    <div class="project-name"><span class="live-dot"></span>Untitled scene <span class="muted">·</span> <span class="muted">Saved locally</span></div>
+    <div class="top-actions">
+      <button class="icon-btn" id="settings-btn" title="Settings" aria-label="Settings">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="update-badge" id="update-badge" hidden></span>
+      </button>
+      <div class="avatar">G</div>
+    </div>
+  </header>
+  <main class="workspace">
+    <aside class="rail">
+      <div class="rail-heading"><span>YOUR SKINS</span><span class="count" id="skin-count">01</span></div>
+      <button class="skin-card selected" id="active-skin-card">
+        <span class="skin-preview" id="skin-thumb"><span class="mini-person"><i></i><b></b><em></em></span></span>
+        <span class="skin-title" id="skin-name">Default</span><span class="skin-meta">CURRENT SKIN</span>
+      </button>
+      <button class="add-skin" id="upload-trigger"><span class="plus">+</span><span>Import a skin</span><small>PNG · 64 x 64</small></button>
+      <div class="rail-tip"><span class="tip-icon">*</span><p>Drop a skin PNG here to see it on your character.</p></div>
+      <input type="file" id="skin-file" accept="image/png,.png" hidden />
+    </aside>
+    <section class="stage-column">
+      <div class="stage-toolbar">
+        <div class="crumb"><span>SCENE</span><span class="slash">/</span><strong>CHARACTER 01</strong></div>
+        <div class="stage-tools">
+          <button class="tool-btn" id="reset-camera" title="Reset camera"><span class="tool-icon">&#x21BA;</span> <span>Reset view</span></button>
+          <span class="tool-divider"></span>
+          <button class="tool-btn active-tool" id="grid-toggle" title="Toggle grid">&#x25A6;</button>
+          <button class="tool-btn" id="fullscreen" title="Fullscreen">&#x26F6;</button>
+        </div>
+      </div>
+      <div class="viewport-wrap" id="viewport-wrap">
+        <div class="viewport-backdrop"></div>
+        <div id="viewport" aria-label="Interactive 3D character viewport"></div>
+        <div class="viewport-overlay">
+          <div class="scene-chip"><span class="green-dot"></span> LIVE PREVIEW</div>
+          <button class="free-camera-btn" id="free-camera" title="Enter free camera mode">&#x2316; Free move</button>
+          <div class="viewport-hint" id="drag-hint">DRAG TO ORBIT <span>·</span> FREE MOVE FOR WASD</div>
+        </div>
+        <div class="viewport-side-controls">
+          <button id="zoom-in" aria-label="Zoom in">+</button>
+          <span id="zoom-label">1.0x</span>
+          <button id="zoom-out" aria-label="Zoom out">-</button>
+          <span class="control-separator"></span>
+          <button id="center-char" aria-label="Center character">&#x25CE;</button>
+        </div>
+        <div class="playback">
+          <button id="restart-animation" title="Restart">&#x21B6;</button>
+          <button class="play-toggle" id="play-toggle" title="Pause animation">II</button>
+          <button id="replay-animation" title="Replay">&#x21BB;</button>
+          <span class="playback-divider"></span>
+          <span class="timecode" id="timecode">00:01 / 00:02</span>
+        </div>
+        <div class="loading" id="loading">Preparing your studio...</div>
+      </div>
+      <nav class="bottom-tabs" aria-label="Editor sections">
+        <button class="tab active" data-tab="poses"><span>&#x2733;</span> Poses</button>
+        <button class="tab" data-tab="look"><span>&#x25C8;</span> Look</button>
+        <button class="tab" data-tab="lighting"><span>&#x263C;</span> Lighting</button>
+        <button class="tab" data-tab="camera"><span>&#x2299;</span> Camera</button>
+      </nav>
+    </section>
+    <aside class="inspector">
+      <div class="inspector-header">
+        <div class="inspector-title"><span class="inspector-symbol">&#x2733;</span><h1 id="panel-title">Poses</h1></div>
+        <button class="more-btn" title="More options">...</button>
+      </div>
+      <div class="panel-content" id="panel-content"></div>
+      <div class="export-wrap">
+        <div class="export-caption"><span>READY TO EXPORT</span><span class="export-time">2 SEC · 60 FPS</span></div>
+        <button class="export-btn" id="export-btn"><span class="download">&#x2193;</span> Export video <span class="export-arrow">&#x2197;</span></button>
+        <div class="export-note" id="export-note">Browser export · WebM format</div>
+      </div>
+    </aside>
+  </main>
+
+  <div class="settings-overlay" id="settings-overlay" hidden>
+    <div class="settings-panel">
+      <div class="settings-header">
+        <h2>Settings</h2>
+        <button class="settings-close" id="settings-close" aria-label="Close settings">&times;</button>
+      </div>
+      <div class="settings-body" id="settings-body"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="./app.js" onerror="window.__blockframeFail('The studio code could not load. Keep the server window open and reload.')"></script>
+</body>
+</html>

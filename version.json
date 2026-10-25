@@ -1,0 +1,5 @@
+{
+  "version": "1.0.0",
+  "channel": "stable",
+  "changelog": "Initial release — 3D skin viewer, full armor system with trims, pose animations, held items, and video export."
+}
