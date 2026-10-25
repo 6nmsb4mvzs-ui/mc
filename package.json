@@ -27,23 +27,21 @@
       "server.js",
       "version.json",
       "src/**/*",
-      "assets/**/*",
-      "icons/**/*"
+      "assets/**/*"
     ],
     "win": {
       "target": [
         {
-          "target": "nsis",
+          "target": "portable",
           "arch": ["x64"]
         }
       ],
-      "icon": "icons/icon.png"
+      "icon": "icons/icon.ico"
     },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "installerIcon": "icons/icon.png",
-      "uninstallerIcon": "icons/icon.png"
-    }
+    "portable": {
+      "artifactName": "Blockframe-Skin-Studio.exe"
+    },
+    "asar": true,
+    "compression": "maximum"
   }
 }
